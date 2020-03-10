@@ -16,18 +16,18 @@
     </div>
     <v-spacer></v-spacer>
     <v-btn
-      href="/login"
+      to="/users"
       text
     >
-      <span class="mr-2">Log in</span>
-      <v-icon>mdi-login</v-icon>
+      <span class="mr-2">Users</span>
+      <v-icon>mdi-user</v-icon>
     </v-btn>
     <v-btn
-      href="/signup"
+      to="/logout"
       text
     >
-      <span class="mr-2">Sign Up</span>
-      <v-icon>mdi-account</v-icon>
+      <span class="mr-2">Log Out</span>
+      <v-icon>mdi-logout</v-icon>
     </v-btn>
   </v-app-bar>
 </template>

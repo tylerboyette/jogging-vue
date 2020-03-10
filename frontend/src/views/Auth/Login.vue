@@ -12,21 +12,27 @@
             @input="$v.email.$touch()"
             @blur="$v.email.$touch()">
           </v-text-field>
-         <v-text-field
-            v-model="password"
-            :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="show_password ? 'text' : 'password'"
-            name="input-10-1"
-            label="Password"
-            hint="At least 3 characters"
-            :error-messages="passwordErrors"
-            @click:append="show_password = !show_password"
-            @input="$v.password.$touch()"
-            @blur="$v.password.$touch()"
+          <v-text-field
+              v-model="password"
+              :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="show_password ? 'text' : 'password'"
+              name="input-10-1"
+              label="Password"
+              hint="At least 3 characters"
+              :error-messages="passwordErrors"
+              @click:append="show_password = !show_password"
+              @input="$v.password.$touch()"
+              @blur="$v.password.$touch()"
           ></v-text-field>
 
-          <v-btn class="mr-4 primary" @click="submit">Log in</v-btn>
-          <v-btn class="mr-4 success" to="/signup">Sign up</v-btn>
+          <v-btn class="mr-4 primary" @click="submit">
+            Log in
+            <v-icon dark right>mdi-login</v-icon>
+          </v-btn>
+          <v-btn class="mr-4 success" to="/signup">
+            Sign up
+            <v-icon dark right>mdi-account</v-icon>
+          </v-btn>
         </form>
       </v-col>
     </v-row>
@@ -36,6 +42,9 @@
 import { validationMixin } from 'vuelidate'
 import { required, minLength, email } from 'vuelidate/lib/validators'
 import AuthService from '@/services/AuthService'
+import { mapActions } from 'vuex'
+import * as constants from '@/store/constants'
+
 export default {
   name: 'Login',
   mixins: [validationMixin],
@@ -72,6 +81,9 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      setCurrentUser: constants.ACTION_SET_CURRENT_USER,
+    }),
     submit () {
       this.$v.$touch()
       if (!this.$v.$invalid) {
@@ -81,8 +93,9 @@ export default {
             timeout:900
           });
           localStorage.setItem('token', data.data.token)
+          this.setCurrentUser(data.data);
           this.$router.push({
-            name: 'Dashboard'
+            name: 'dashboard'
           })
         }).catch(() => {
           this.$toast.error("Email or Password is incorrect!",{

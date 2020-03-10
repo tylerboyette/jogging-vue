@@ -1,3 +1,5 @@
 <template>
- <p>Dashboard</p>
+  <p>
+    Hello Dashboard
+  </p>
 </template>

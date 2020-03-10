@@ -3,8 +3,7 @@ const ROLES = require('../constants/role');
 
 function create(req, res, next) {
   const user = new User({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
+    name: req.body.name,
     email: req.body.email,
     password: req.body.password,
   });
@@ -22,8 +21,7 @@ function create(req, res, next) {
 
 function update(req, res, next) {
   Object.assign(req.userModel, {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
+    name: req.body.name,
     email: req.body.email,
   });
 
@@ -60,10 +58,12 @@ function list(req, res, next) {
 }
 
 function remove(req, res, next) {
-  req.userModel.remove(() => {
-    res.json(req.userModel);
-  })
-  .catch(next);
+  req.userModel
+    .remove()
+    .then(() => {
+      res.json(req.userModel);
+    })
+    .catch(next);
 }
 
 function getUserByID(req, res, next, id) {

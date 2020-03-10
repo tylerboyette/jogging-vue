@@ -46,7 +46,10 @@
           ></v-text-field>
 
           <v-btn class="mr-4 primary" @click="submit">Sign up</v-btn>
-          <v-btn class="mr-4" to="/login">Back to log in</v-btn>
+          <v-btn class="mr-4" to="/login">
+            <v-icon dark left>mdi-arrow-left</v-icon>
+            Back to log in
+          </v-btn>
         </form>
       </v-col>
     </v-row>

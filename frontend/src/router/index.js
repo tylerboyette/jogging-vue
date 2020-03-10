@@ -1,33 +1,35 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../views/Auth/Login.vue'
+import Layout from '../views/App/Layout.vue'
+import UserList from '../views/App/Users/UserList.vue'
 import Dashboard from '../views/App/Dashboard.vue'
+
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'Dashboard',
-    component: Dashboard
-  },
-  {
     path: '/login',
     name: 'login',
     meta: { skipAuth: true},
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/Auth/Login.vue')
   },
   {
     path: '/signup',
     name: 'signup',
     meta: { skipAuth: true},
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/Auth/Signup.vue')
+  },
+  { path: '/logout', name: 'logout', meta: { skipAuth: true},  component: () => import(/* webpackChunkName: "about" */ '../views/App/Logout.vue')},
+  {
+    path: '/',
+    name: 'Layout',
+    component: Layout,
+    children:[
+      { path:'', redirect:{name:'user-list'}, name:'index'},
+      { path: 'users', name: 'user-list', component: UserList, meta: { manager: true } },
+      { path: 'dashboard', name: 'dashboard', component: Dashboard },
+    ]
   },
   
 ]
@@ -45,11 +47,12 @@ router.beforeEach((to, from, next) => {
       return
     }
   }
+  
   if (to.matched.some(record => record.meta.manage)) {
-    const userRole = parseInt(localStorage.setItem('user-role'))
-    if (!userRole) {
+    const userRole = localStorage.setItem('user-role')
+    if (userRole!=='user') {
       next({
-        name: 'record-list',
+        name: 'user-list',
       })
       return
     }
