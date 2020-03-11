@@ -14,15 +14,26 @@
         width="40"
       />
     </div>
+    <v-toolbar-title>Jogging Track</v-toolbar-title>
+    <div class="ml-10">
+      <v-btn
+        to="/users"
+        text
+        v-if="currentUser.role!='user'"
+      >
+        <span class="mr-2">Users</span>
+        <v-icon>mdi-account</v-icon>
+      </v-btn>
+      <v-btn
+        to="/entries"
+        text
+        v-if="currentUser.role!='manager'"
+      >
+        <span class="mr-2">Entries</span>
+      </v-btn>
+    </div>
     <v-spacer></v-spacer>
-    <v-btn
-      to="/users"
-      text
-      v-if="currentUser.role!='user'"
-    >
-      <span class="mr-2">Users</span>
-      <v-icon>mdi-user</v-icon>
-    </v-btn>
+
     <v-btn
       to="/logout"
       text

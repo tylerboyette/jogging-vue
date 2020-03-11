@@ -2,25 +2,27 @@ const mongoose = require('mongoose');
 const Entry = require('../models/entry.model');
 const ROLES = require('../constants/role');
 
-function create(req, res, next) {
-  const entry = new Entry(req.body);
-  entry.user = req.user._id;
-
-  entry.save()
-  .then((newEntry) => {
-    res.json(newEntry);
-  })
-  .catch(next);
+async function create(req, res, next) {
+  try {
+    const entry = new Entry(req.body);
+    entry.user = req.user._id;
+    let newEntry = await entry.save();
+    let result = await Entry.findById(newEntry._id).populate('user');
+    res.json(result);
+  } catch (error) {
+    next();
+  }
 }
 
-function update(req, res, next) {
-  Object.assign(req.entry, req.body);
-
-  req.entry.save()
-  .then((updatedEntry) => {
-    res.json(updatedEntry);
-  })
-  .catch(next);
+async function update(req, res, next) {
+  try {
+    Object.assign(req.entry, req.body);
+    let updateEntry = await req.entry.save();
+    let result = await Entry.findById(updateEntry._id).populate('user');
+    res.json(result);
+  } catch (error) {
+    next();
+  }
 }
 
 function read(req, res) {
@@ -42,7 +44,9 @@ function list(req, res, next) {
 }
 
 function remove(req, res, next) {
-  req.entry.remove(() => {
+  req.entry
+  .remove()
+  .then(() => {
     res.json(req.entry);
   })
   .catch(next);

@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '../views/App/Layout.vue'
-import UserList from '../views/App/Users/UserList.vue'
+import UserList from '../views/App/UserList.vue'
+import EntryList from '../views/App/EntryList.vue'
 import Dashboard from '../views/App/Dashboard.vue'
 
 
@@ -28,6 +29,7 @@ const routes = [
     children:[
       { path:'', redirect:{name:'user-list'}, name:'index'},
       { path: 'users', name: 'user-list', component: UserList, meta: { manager: true } },
+      { path: 'entries', name: 'entry-list', component: EntryList, meta: { manager: true } },
       { path: 'dashboard', name: 'dashboard', component: Dashboard },
     ]
   },

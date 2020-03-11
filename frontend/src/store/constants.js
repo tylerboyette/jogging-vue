@@ -11,5 +11,15 @@ export const UPDATE_USER = 'updateUser'
 export const ADD_USER = 'addUser'
 export const DELETE_USER = 'deleteUser'
 
+export const ACTION_GET_ENTRIES = 'actionGetEntries'
+export const SET_ENTRIES = 'setEntries'
+export const CLEAR_ENTRIES = 'clearEntries'
+export const ACTION_ADD_ENTRY = 'actionAddEntry'
+export const ACTION_UPDATE_ENTRY = 'actionUpdateEntry'
+export const ACTION_DELETE_ENTRY = 'actionDeleteEntry'
+export const UPDATE_ENTRY = 'updateEntry'
+export const ADD_ENTRY = 'addEntry'
+export const DELETE_ENTRY = 'deleteEntry'
+
 
 export const ACTION_UPDATE_PROFILE = 'actionUpdateUserProfile'
