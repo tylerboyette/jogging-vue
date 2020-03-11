@@ -18,6 +18,7 @@
     <v-btn
       to="/users"
       text
+      v-if="currentUser.role!='user'"
     >
       <span class="mr-2">Users</span>
       <v-icon>mdi-user</v-icon>
@@ -31,3 +32,14 @@
     </v-btn>
   </v-app-bar>
 </template>
+<script>
+import { mapActions, mapGetters } from 'vuex'
+export default {
+  name:'Topbar',
+  computed: {
+    ...mapGetters([
+      'currentUser',
+    ]),
+  }
+}
+</script>

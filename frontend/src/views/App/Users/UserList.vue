@@ -57,8 +57,11 @@
                             v-model="editedItem.password"
                             :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="show_password ? 'text' : 'password'"
-                            name="input-10-1"
+                            :error-messages="passwordErrors"
+                            name="password"
                             label="Password"
+                            @input="$v.editedItem.password.$touch()"
+                            @blur="$v.editedItem.password.$touch()"
                             @click:append="show_password = !show_password"
                             ></v-text-field>
                           </v-col>
@@ -79,17 +82,20 @@
           <template v-slot:item.action="{ item }">
             <v-icon
               class="mr-2"
+              color='blue'
               @click="editItem(item)"
             >
               mdi-pencil
             </v-icon>
             <v-icon
               @click="deleteItem(item)"
+              color='red'
             >
               mdi-delete
             </v-icon>
           </template>
           <template v-slot:no-data>
+            <p class='headline'>There's no users!</p>
             <v-btn color="primary" @click="initialize">Reload</v-btn>
           </template>
         </v-data-table>
@@ -146,7 +152,7 @@ export default {
       {
         text: 'Name',
         align: 'start',
-        sortable: false,
+        sortable: true,
         value: 'name',
       },
       { text: 'Email', value: 'email' },
@@ -164,6 +170,7 @@ export default {
     defaultItem: {
       name: '',
       email: '',
+      password:'',
       role:'user'
     },
   }),
@@ -229,7 +236,11 @@ export default {
 
     editItem (item) {
       this.editedIndex = this.users.indexOf(item)
-      this.editedItem = Object.assign({}, item)
+      this.editedItem = Object.assign({}, {
+        name: item.name,
+        email: item.email,
+        role: item.role,
+      })
       this.dialog = true
     },
 
@@ -245,6 +256,7 @@ export default {
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
+        this.$v.$reset()
       }, 300)
     },
     closeDelete () {
@@ -276,7 +288,6 @@ export default {
 
     save () {
       this.$v.$touch();
-      console.log(this.$v)
       if (!this.$v.$invalid) {
         if (this.editedIndex > -1) {
           this.updateUser({id:this.users[this.editedIndex]._id, data: this.editedItem})

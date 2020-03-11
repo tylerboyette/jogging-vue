@@ -66,10 +66,7 @@ const mutations = {
   [constants.UPDATE_USER] (state, user) {
     let users = state.users;
     users = users.map(item=>{
-      if(item._id===user._id){
-        item = user;
-        return item;
-      }
+      if(item._id===user._id) item = user;
       return item;
     })
     state.users = users

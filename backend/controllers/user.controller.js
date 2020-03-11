@@ -51,7 +51,6 @@ function list(req, res, next) {
   }
   User.find(where)
   .then((users) => {
-    console.log(users)
     res.json(users);
   })
   .catch(next);
