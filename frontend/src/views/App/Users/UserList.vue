@@ -23,31 +23,47 @@
                   </v-card-title>
                   <v-card-text>
                     <v-container>
-                      <v-row>
-                        <v-col cols="12" sm="12" md="12">
-                          <v-text-field v-model="editedItem.name" label="Name"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="12" md="12">
-                          <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="12" md="12">
-                           <v-select
-                            v-model="editedItem.role"
-                            :items="roles"
-                            label="Role"
-                          ></v-select>
-                        </v-col>
-                        <v-col cols="12" sm="12" md="12">
-                          <v-text-field
-                          v-model="editedItem.password"
-                          :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
-                          :type="show_password ? 'text' : 'password'"
-                          name="input-10-1"
-                          label="Password"
-                          @click:append="show_password = !show_password"
-                          ></v-text-field>
-                        </v-col>
-                      </v-row>
+                      <form>
+                        <v-row>
+                          <v-col cols="12" sm="12" md="12">
+                            <v-text-field 
+                              v-model="editedItem.name" 
+                              label="Name"
+                              :error-messages="nameErrors"
+                              required
+                              @input="$v.editedItem.name.$touch()"
+                              @blur="$v.editedItem.name.$touch()"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="12" sm="12" md="12">
+                            <v-text-field 
+                              v-model="editedItem.email" 
+                              label="Email"
+                              :error-messages="emailErrors"
+                              required
+                              @input="$v.editedItem.email.$touch()"
+                              @blur="$v.editedItem.email.$touch()"
+                            ></v-text-field>
+                          </v-col>
+                          <v-col cols="12" sm="12" md="12">
+                            <v-select
+                              v-model="editedItem.role"
+                              :items="roles"
+                              label="Role"
+                            ></v-select>
+                          </v-col>
+                          <v-col cols="12" sm="12" md="12">
+                            <v-text-field
+                            v-model="editedItem.password"
+                            :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="show_password ? 'text' : 'password'"
+                            name="input-10-1"
+                            label="Password"
+                            @click:append="show_password = !show_password"
+                            ></v-text-field>
+                          </v-col>
+                        </v-row>
+                      </form>
                     </v-container>
                   </v-card-text>
 
@@ -74,7 +90,7 @@
             </v-icon>
           </template>
           <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
+            <v-btn color="primary" @click="initialize">Reload</v-btn>
           </template>
         </v-data-table>
         <v-dialog
@@ -92,7 +108,7 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="saveDelete">Save</v-btn>
+                <v-btn color="blue darken-1" text @click="saveDelete">Yes</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -103,7 +119,25 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import * as constants from '@/store/constants'
+import { validationMixin } from 'vuelidate'
+import { required, minLength, email } from 'vuelidate/lib/validators'
+
 export default {
+  name: 'UserList',
+  mixins: [validationMixin],
+  validations: {
+    editedItem:{
+      name: {
+        required,
+        minLength: minLength(3)
+      },
+      email: { required, email },
+      password: {
+        required,
+        minLength: minLength(3)
+      }
+    }
+  },
   data: () => ({
     dialog: false,
     confirm_dialog:false,
@@ -141,6 +175,27 @@ export default {
     ]),
     formTitle () {
       return this.editedIndex === -1 ? 'New User' : 'Edit User'
+    },
+    nameErrors () {
+      const errors = []
+      if (!this.$v.editedItem.name.$dirty) return errors
+      !this.$v.editedItem.name.minLength && errors.push('Name must be at most 3 characters long')
+      !this.$v.editedItem.name.required && errors.push('Name is required.')
+      return errors
+    },
+    emailErrors () {
+      const errors = []
+      if (!this.$v.editedItem.email.$dirty) return errors
+      !this.$v.editedItem.email.email && errors.push('Must be valid e-mail')
+      !this.$v.editedItem.email.required && errors.push('E-mail is required')
+      return errors
+    },
+    passwordErrors () {
+      const errors = []
+      if (!this.$v.editedItem.password.$dirty) return errors
+      !this.$v.editedItem.password.minLength && errors.push('Password must be at most 3 characters long')
+      !this.$v.editedItem.password.required && errors.push('Password is required')
+      return errors
     },
   },
 
@@ -182,7 +237,6 @@ export default {
       const index = this.users.indexOf(item)
       this.confirm_dialog = true;
       this.deletedIndex = index;
-      // confirm('Are you sure you want to delete this item?') && this.users.splice(index, 1)
     },
 
     close () {
@@ -204,7 +258,6 @@ export default {
       if(this.deletedIndex > -1){
         this.deleteUser(this.users[this.deletedIndex]._id)
         .then(()=>{
-          this.users.splice(this.deletedIndex, 1)
           this.$toast.success("User is deleted!",{
             timeout:900
           });
@@ -222,39 +275,38 @@ export default {
     },
 
     save () {
-      if (this.editedIndex > -1) {
-         this.updateUser({id:this.users[this.editedIndex]._id, data: this.editedItem})
-        .then(()=>{
-          Object.assign(this.users[this.editedIndex], this.editedItem)
-          this.$toast.success("User updated!",{
-              timeout:900
-          });
-        })
-        .catch(()=>{
-          this.$toast.error("Email is already taken!",{
-           timeout:900
-          });
-        })
-        
-      } else {
-        this.addUser(this.editedItem)
-        .then(()=>{
-          this.users.push(this.editedItem)
-          this.getUsers();
-          console.log('success')
-          this.$toast.success("New User created!",{
+      this.$v.$touch();
+      console.log(this.$v)
+      if (!this.$v.$invalid) {
+        if (this.editedIndex > -1) {
+          this.updateUser({id:this.users[this.editedIndex]._id, data: this.editedItem})
+          .then(()=>{
+            this.$toast.success("User updated!",{
+                timeout:900
+            });
+          })
+          .catch(()=>{
+            this.$toast.error("Email is already taken!",{
             timeout:900
-          });
-        })
-        .catch(()=>{
-          this.$toast.error("Email is already taken!",{
-           timeout:900
-          });
-        })
-        
+            });
+          })
+          
+        } else {
+          this.addUser(this.editedItem)
+          .then(()=>{
+            this.$toast.success("New User created!",{
+              timeout:900
+            });
+          })
+          .catch(()=>{
+            this.$toast.error("Email is already taken!",{
+            timeout:900
+            });
+          })     
+        }
+        this.close()
       }
-      this.close()
-    },
+    }
   },
 }
 </script>

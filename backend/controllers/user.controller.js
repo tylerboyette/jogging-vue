@@ -45,13 +45,13 @@ function read(req, res) {
 }
 
 function list(req, res, next) {
-  let where = {};
+  let where = { _id: { $ne: req.user._id }};
   if (req.user.role === ROLES.MANAGER) {
-    where = { role: { $ne: ROLES.ADMIN } };
+    where.role = { $ne: ROLES.ADMIN } ;
   }
-
   User.find(where)
   .then((users) => {
+    console.log(users)
     res.json(users);
   })
   .catch(next);
