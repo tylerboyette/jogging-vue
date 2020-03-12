@@ -158,7 +158,6 @@ export default {
     menu1:false,
     date:null,
     confirm_dialog:false,
-    roles:['user','manager'],
     headers: [
       {
         text: 'Name',

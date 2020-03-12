@@ -4,11 +4,13 @@ import EntryService  from '@/services/EntryService'
 // initial state
 const state = {
   entries: [],
+  report: [],
 }
 
 // getters
 const getters = {
   entries: state => state.entries,
+  reports: state => state.report
 }
 
 // actions
@@ -44,6 +46,14 @@ const actions = {
       return data;
     })
   },
+  [constants.ACTION_GET_REPORT] ({ commit }) {
+    commit(constants.CLEAR_REPORT)
+    return EntryService.report()
+    .then(({ data }) => {
+      commit(constants.SET_REPORT, data)
+      return data
+    })
+  },
 }
 
 // mutations
@@ -70,6 +80,12 @@ const mutations = {
       return item;
     })
     state.entries = entries
+  },
+  [constants.CLEAR_REPORT] (state) {
+    state.report = []
+  },
+  [constants.SET_REPORT] (state, report) {
+    state.report = report
   },
 }
 

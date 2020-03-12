@@ -1,8 +1,8 @@
 <template>
-  <v-container style="min-height:100%; padding:15%">
+  <v-container style="min-height:100%; padding:10%">
     <v-row class="text-center" justify="center" align="center">
       <v-col cols="6">
-        <span class="headline">Sign up</span>
+        <span class="headline">Profile</span>
         <form>
         <v-text-field
           v-model="name"
@@ -45,10 +45,10 @@
             @blur="$v.confirm_password.$touch()"
           ></v-text-field>
 
-          <v-btn class="mr-4 primary" @click="submit">Sign up</v-btn>
-          <v-btn class="mr-4" to="/login">
+          <v-btn class="mr-4 primary" @click="submit">Save</v-btn>
+          <v-btn class="mr-4" to="/">
             <v-icon dark left>mdi-arrow-left</v-icon>
-            Back to log in
+            Cancel
           </v-btn>
         </form>
       </v-col>
@@ -56,12 +56,13 @@
   </v-container>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex'
 import { validationMixin } from 'vuelidate'
+import * as constants from '@/store/constants'
 import { required, minLength, email } from 'vuelidate/lib/validators'
-import AuthService from '@/services/AuthService'
 
 export default {
-  name: 'SignUp',
+  name: 'Profile',
   mixins: [validationMixin],
 
   validations: {
@@ -88,8 +89,15 @@ export default {
     show_password: false,
     show_confirm_password: false
   }),
+  created () {
+   this.name = this.currentUser.name
+   this.email = this.currentUser.email
+  },
 
   computed: {
+    ...mapGetters([
+      'currentUser'
+    ]),
     nameErrors () {
       const errors = []
       if (!this.$v.name.$dirty) return errors
@@ -123,6 +131,9 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      updateProfile: constants.ACTION_SET_PROFILE,
+    }),
     submit () {
       this.$v.$touch()
       if (!this.$v.$invalid) {
@@ -131,15 +142,17 @@ export default {
           email: this.email,
           password: this.password
         }
-        AuthService.signup(data).then(res => {
-          this.$toast.success("Login successfully!",{
-           timeout:900
-          });
-        }).catch(err => {
-          this.$toast.error("Email is already existed",{
-           timeout:900
+         this.updateProfile(data)
+        .then(()=>{
+          this.$toast.success("Profile updated",{
+          timeout:900
           });
         })
+        .catch(()=>{
+          this.$toast.error("Email is already taken",{
+          timeout:900
+          });
+        })  
       }
     },
     clear () {

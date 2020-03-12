@@ -1,5 +1,7 @@
 const User = require('../models/user.model');
 const ROLES = require('../constants/role');
+const config = require('../config');
+const jwt = require('jsonwebtoken');
 
 function create(req, res, next) {
   const user = new User({
@@ -65,6 +67,34 @@ function remove(req, res, next) {
     .catch(next);
 }
 
+function updateProfile(req, res, next) {
+  let emailUpdated = false;
+  Object.assign(req.userModel, {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    password: req.body.password
+  });
+  req.userModel
+    .save()
+    .then(updatedUser => {
+      const token = jwt.sign({
+        _id: updatedUser._id, // eslint-disable-line
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+      }, config.jwtSecret, { expiresIn: config.jwtExpires });
+      res.json({
+        _id: updatedUser._id, // eslint-disable-line
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        token,
+      });
+    })
+    .catch(next);
+}
+
 function getUserByID(req, res, next, id) {
   User.findById(id)
   .then((user) => {
@@ -101,4 +131,5 @@ module.exports = {
   remove,
   getUserByID,
   getProfile,
+  updateProfile,
 };

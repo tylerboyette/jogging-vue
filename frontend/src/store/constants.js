@@ -1,5 +1,6 @@
 export const ACTION_SET_CURRENT_USER = 'actionGetCurrentUser'
 export const SET_CURRENT_USER = 'setCurrentUser'
+export const ACTION_SET_PROFILE = 'actionSetProfile'
 
 export const ACTION_GET_USERS = 'actionGetUsers'
 export const SET_USERS = 'setUsers'
@@ -20,6 +21,9 @@ export const ACTION_DELETE_ENTRY = 'actionDeleteEntry'
 export const UPDATE_ENTRY = 'updateEntry'
 export const ADD_ENTRY = 'addEntry'
 export const DELETE_ENTRY = 'deleteEntry'
+export const ACTION_GET_REPORT = 'actionGetReport'
+export const SET_REPORT = 'setReport'
+export const CLEAR_REPORT = 'clearReport'
 
 
 export const ACTION_UPDATE_PROFILE = 'actionUpdateUserProfile'

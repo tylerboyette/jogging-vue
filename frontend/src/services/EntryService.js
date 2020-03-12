@@ -48,6 +48,15 @@ const EntryService = {
       baseURL: BASE_API_URL
     })
   },
+  report(){
+    const token = localStorage.getItem('token');
+    return axios.get("entries/report", {
+      headers:{
+        'Authorization': `Bearer ${token}`,
+      },
+      baseURL: BASE_API_URL
+    })
+  }
 }
 
 export default EntryService

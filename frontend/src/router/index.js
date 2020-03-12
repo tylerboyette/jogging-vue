@@ -1,10 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '../views/App/Layout.vue'
-import UserList from '../views/App/UserList.vue'
-import EntryList from '../views/App/EntryList.vue'
 import Dashboard from '../views/App/Dashboard.vue'
-
 
 Vue.use(VueRouter)
 
@@ -27,9 +24,11 @@ const routes = [
     name: 'Layout',
     component: Layout,
     children:[
-      { path:'', redirect:{name:'user-list'}, name:'index'},
-      { path: 'users', name: 'user-list', component: UserList, meta: { manager: true } },
-      { path: 'entries', name: 'entry-list', component: EntryList, meta: { manager: true } },
+      { path:'', redirect:{name:'dashboard'}, name:'index'},
+      { path: 'users', name: 'user-list',  component: () => import(/* webpackChunkName: "about" */ '../views/App/UserList.vue'), meta: { manager: true } },
+      { path: 'entries', name: 'entry-list', component: () => import(/* webpackChunkName: "about" */ '../views/App/EntryList.vue'), meta: { manager: true } },
+      { path: 'report', name: 'reports',  component: () => import(/* webpackChunkName: "about" */ '../views/App/Report.vue'), meta: { manager: true } },
+      { path: 'settings', name: 'settings',  component: () => import(/* webpackChunkName: "about" */ '../views/App/Profile.vue')},
       { path: 'dashboard', name: 'dashboard', component: Dashboard },
     ]
   },
@@ -54,7 +53,7 @@ router.beforeEach((to, from, next) => {
     const userRole = localStorage.setItem('user-role')
     if (userRole!=='user') {
       next({
-        name: 'user-list',
+        name: '',
       })
       return
     }

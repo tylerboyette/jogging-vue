@@ -3,7 +3,6 @@ const config = require('../config');
 const User = require('../models/user.model');
 
 function login(req, res, next) {
-  console.log(req.body);
   User.findOne({ email: req.body.email })
     .select('_id password email name role')
     .exec()

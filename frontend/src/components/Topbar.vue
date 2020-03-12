@@ -15,6 +15,7 @@
       />
     </div>
     <v-toolbar-title>Jogging Track</v-toolbar-title>
+    
     <div class="ml-10">
       <v-btn
         to="/users"
@@ -24,16 +25,35 @@
         <span class="mr-2">Users</span>
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn
-        to="/entries"
-        text
-        v-if="currentUser.role!='manager'"
-      >
-        <span class="mr-2">Entries</span>
-      </v-btn>
+
+      <v-menu offset-y 
+        v-if="currentUser.role!='manager'">
+        <template v-slot:activator="{on}">
+          <v-btn text slot="activator" v-on="on">
+            <span>Entries</span>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+          v-for="link in links"
+          :key="link.text"
+          :to="link.route"
+          >
+            <v-list-item-title>{{ link.text }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
     </div>
     <v-spacer></v-spacer>
 
+    <v-btn
+      to="/settings"
+      text
+    >
+      <span class="mr-2">Settings</span>
+      <v-icon>mdi-cog-outline</v-icon>
+    </v-btn>
     <v-btn
       to="/logout"
       text
@@ -51,6 +71,14 @@ export default {
     ...mapGetters([
       'currentUser',
     ]),
+  },
+  data(){
+    return {
+      links:[
+        { text:'Entries', route:'/entries' },
+        { text:'Weekly Report', route:'/report' },
+      ]
+    }
   }
 }
 </script>
