@@ -46,21 +46,28 @@
 
     </div>
     <v-spacer></v-spacer>
-
-    <v-btn
-      to="/settings"
-      text
-    >
-      <span class="mr-2">Settings</span>
-      <v-icon>mdi-cog-outline</v-icon>
-    </v-btn>
-    <v-btn
-      to="/logout"
-      text
-    >
-      <span class="mr-2">Log Out</span>
-      <v-icon>mdi-logout</v-icon>
-    </v-btn>
+      <v-menu offset-y >
+        <template v-slot:activator="{on}">
+            <v-avatar slot="activator" v-on="on">
+              <img
+                :src="currentUser.profileImg"
+                alt="John"
+              >
+            </v-avatar>
+        </template>
+        <v-list>
+          <v-list-item
+          v-for="link in account"
+          :key="link.text"
+          :to="link.route"
+          >
+            <v-list-item-title>
+              {{ link.text }}
+              <v-icon>{{link.icon}}</v-icon>
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
   </v-app-bar>
 </template>
 <script>
@@ -77,6 +84,10 @@ export default {
       links:[
         { text:'Entries', route:'/entries' },
         { text:'Weekly Report', route:'/report' },
+      ],
+      account:[
+        { text:'Settings', route:'/settings', icon:'mdi-cog-outline' },
+        { text:'Log out', route:'/logout', icon:'mdi-logout'},
       ]
     }
   }

@@ -1,11 +1,3 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import vuetify from './plugins/vuetify'
-import Toast from "vue-toastification";
-import "vue-toastification/dist/index.css";
-
 import firebase from 'firebase';
 import 'firebase/storage';
 var firebaseConfig = {
@@ -19,16 +11,9 @@ var firebaseConfig = {
   measurementId: "G-L1KVX9VHH0"
 };
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 const storage = firebase.storage();
-
-Vue.config.productionTip = false
-Vue.use(Toast)
-
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
-}).$mount('#app')
+export { storage, firebase as default };

@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-const BASE_API_URL = 'http://localhost:3000/api'
-
 const EntryService = {
   list () {
     const token = localStorage.getItem('token');
@@ -9,7 +7,7 @@ const EntryService = {
       headers:{
         'Authorization': `Bearer ${token}`,
       },
-      baseURL: BASE_API_URL
+      baseURL: process.env.VUE_APP_BASE_API_URL
     })
   },
   get(id) {
@@ -18,7 +16,7 @@ const EntryService = {
       headers:{
         'Authorization': `Bearer ${token}`,
       },
-      baseURL: BASE_API_URL
+      baseURL: process.env.VUE_APP_BASE_API_URL
     })
   },
   create(data) {
@@ -27,7 +25,7 @@ const EntryService = {
       headers:{
         'Authorization': `Bearer ${token}`,
       },
-      baseURL: BASE_API_URL
+      baseURL: process.env.VUE_APP_BASE_API_URL
     })
   },
   update(id, data) {
@@ -36,7 +34,7 @@ const EntryService = {
       headers:{
         'Authorization': `Bearer ${token}`,
       },
-      baseURL: BASE_API_URL
+      baseURL: process.env.VUE_APP_BASE_API_URL
     })
   },
   delete(id) {
@@ -45,7 +43,7 @@ const EntryService = {
       headers:{
         'Authorization': `Bearer ${token}`,
       },
-      baseURL: BASE_API_URL
+      baseURL: process.env.VUE_APP_BASE_API_URL
     })
   },
   report(){
@@ -54,7 +52,7 @@ const EntryService = {
       headers:{
         'Authorization': `Bearer ${token}`,
       },
-      baseURL: BASE_API_URL
+      baseURL: process.env.VUE_APP_BASE_API_URL
     })
   }
 }

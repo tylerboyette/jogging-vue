@@ -21,7 +21,6 @@ const routes = [
   { path: '/logout', name: 'logout', meta: { skipAuth: true},  component: () => import(/* webpackChunkName: "about" */ '../views/App/Logout.vue')},
   {
     path: '/',
-    name: 'Layout',
     component: Layout,
     children:[
       { path:'', redirect:{name:'dashboard'}, name:'index'},

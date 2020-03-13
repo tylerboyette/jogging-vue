@@ -3,6 +3,20 @@
     <v-row class="text-center" justify="center" align="center">
       <v-col cols="6">
         <span class="headline">Profile</span>
+        <v-row>
+          <v-col>
+            <div class="avatar-wrapper">
+                <img
+                  class="profile-pic"
+                  :src="profileImg"
+                />
+                <div class="upload-button">
+                  <i class="fa fa-arrow-circle-up" aria-hidden="true" />
+                </div>
+                <input class="file-upload" type="file" accept="image/*" />
+              </div>
+          </v-col>
+        </v-row>
         <form>
         <v-text-field
           v-model="name"
@@ -59,8 +73,11 @@
 import { mapActions, mapGetters } from 'vuex'
 import { validationMixin } from 'vuelidate'
 import * as constants from '@/store/constants'
+import { storage } from '@/firebaseconfig.js';
 import { required, minLength, email } from 'vuelidate/lib/validators'
+import $ from 'jquery'
 
+let file = null;
 export default {
   name: 'Profile',
   mixins: [validationMixin],
@@ -86,12 +103,15 @@ export default {
     email: '',
     password: '',
     confirm_password: '',
+    profileImg:'https://cdn.vuetifyjs.com/images/john.jpg',
     show_password: false,
     show_confirm_password: false
   }),
   created () {
    this.name = this.currentUser.name
    this.email = this.currentUser.email
+   this.profileImg = this.currentUser.profileImg
+  
   },
 
   computed: {
@@ -134,13 +154,22 @@ export default {
     ...mapActions({
       updateProfile: constants.ACTION_SET_PROFILE,
     }),
-    submit () {
+    async submit () {
       this.$v.$touch()
       if (!this.$v.$invalid) {
+        let profileImg = this.profileImg
+        if (file) {
+        const previewName = +new Date() + '-avatar.jpg';
+          profileImg = await storage
+          .ref(`images/${previewName}`)
+          .putString(file, 'data_url')
+          .then(snapshot => snapshot.ref.getDownloadURL());
+        }
         const data = {
           name: this.name,
           email: this.email,
-          password: this.password
+          password: this.password,
+          profileImg: profileImg
         }
          this.updateProfile(data)
         .then(()=>{
@@ -164,6 +193,83 @@ export default {
     }
   }
 }
+$(document).ready(function() {
+  var readURL = function(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        $('.profile-pic').attr('src', e.target.result);
+        file = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  };
+  $('.file-upload').on('change', function() {
+    console.log("ahaa")
+    readURL(this);
+  });
+
+  $('.upload-button').on('click', function() {
+    console.log("zzzz")
+    $('.file-upload').click();
+  });
+});
 </script>
 <style scoped>
+.avatar-wrapper {
+  position: relative;
+  height: 150px;
+  width: 150px;
+  margin: 5px auto;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 1px 1px 15px -5px black;
+  transition: all 0.3s ease;
+}
+.avatar-wrapper:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+.avatar-wrapper:hover .profile-pic {
+  opacity: 0.5;
+}
+.avatar-wrapper .profile-pic {
+  height: 100%;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+.avatar-wrapper .profile-pic:after {
+  font-family: FontAwesome;
+  content: '\f007';
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  font-size: 140px;
+  background: #ecf0f1;
+  color: #34495e;
+  text-align: center;
+}
+.avatar-wrapper .upload-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+.avatar-wrapper .upload-button .fa-arrow-circle-up {
+  position: absolute;
+  font-size: 184px;
+  top: -17px;
+  left: 0;
+  text-align: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: #34495e;
+}
+.avatar-wrapper .upload-button:hover .fa-arrow-circle-up {
+  opacity: 0.9;
+}
+
 </style>

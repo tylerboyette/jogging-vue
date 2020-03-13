@@ -1,6 +1,4 @@
 import axios from 'axios'
-
-const BASE_API_URL = 'http://localhost:3000/api'
 const ProfileService = {
   update (data) {
     const token = localStorage.getItem('token');
@@ -8,7 +6,7 @@ const ProfileService = {
       headers:{
         'Authorization': `Bearer ${token}`,
       },
-      baseURL: BASE_API_URL
+      baseURL: process.env.VUE_APP_BASE_API_URL
     })
   }
 }

@@ -79,7 +79,6 @@ export default {
       return errors
     }
   },
-
   methods: {
     ...mapActions({
       setCurrentUser: constants.ACTION_SET_CURRENT_USER,
