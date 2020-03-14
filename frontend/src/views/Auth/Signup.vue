@@ -132,7 +132,7 @@ export default {
           password: this.password
         }
         AuthService.signup(data).then(res => {
-          this.$toast.success("Login successfully!",{
+          this.$toast.success("Sign up successfully!",{
            timeout:900
           });
         }).catch(err => {

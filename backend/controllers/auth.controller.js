@@ -5,13 +5,12 @@ const EmailService = require('../services/email.service');
 
 function login(req, res, next) {
   User.findOne({ email: req.body.email })
-    .select('_id password email name role profileImg')
+    .select('_id password email name role profileImg is_verified')
     .exec()
     .then((user) => {
       if (!user) {
         return res.status(500).json({ message: 'Email or password does not match' });
       }
-      
       if (!user.is_verified) {
         return res.status(403).json({
           message: 'Please check your email inbox and verify your email!',

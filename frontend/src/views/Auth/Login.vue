@@ -96,8 +96,8 @@ export default {
           this.$router.push({
             name: 'dashboard'
           })
-        }).catch(() => {
-          this.$toast.error("Email or Password is incorrect!",{
+        }).catch((err) => {
+          this.$toast.error(err.response.data.message,{
              timeout:900
           });
         })

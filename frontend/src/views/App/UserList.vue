@@ -2,7 +2,13 @@
   <v-container style="min-height:100%; padding:5%">
     <v-row class="text-center" justify="center" align="center">
       <v-col cols="10">
+      <v-progress-circular v-if="userLoading"
+        :size="50"
+        color="primary"
+        indeterminate
+      ></v-progress-circular>
         <v-data-table
+          v-if="!userLoading"
           :headers="headers"
           :items="users"
           sort-by="calories"
@@ -181,7 +187,8 @@ export default {
   computed: {
     ...mapGetters([
       'currentUser',
-      'users'
+      'users',
+      'userLoading'
     ]),
     formTitle () {
       return this.editedIndex === -1 ? 'New User' : 'Edit User'

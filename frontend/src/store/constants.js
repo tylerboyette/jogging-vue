@@ -11,6 +11,7 @@ export const ACTION_DELETE_USER = 'actionDeleteUser'
 export const UPDATE_USER = 'updateUser'
 export const ADD_USER = 'addUser'
 export const DELETE_USER = 'deleteUser'
+export const SET_USER_LOADING = 'userLoading'
 
 export const ACTION_GET_ENTRIES = 'actionGetEntries'
 export const SET_ENTRIES = 'setEntries'

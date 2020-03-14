@@ -54,6 +54,7 @@
                 alt="John"
               >
             </v-avatar>
+            <v-card-title>{{currentUser.name}}</v-card-title>
         </template>
         <v-list>
           <v-list-item
