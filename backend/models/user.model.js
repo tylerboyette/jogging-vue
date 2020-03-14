@@ -8,7 +8,9 @@ const SALT_ROUNDS = 10;
 const userSchema = new Schema({
   name: { type: String, required: true, trim: true, default: '' },
   email: { type: String, unique: true, required: true, trim: true },
+  is_verified: { type: Boolean, default: false,},
   password: { type: String, select: false, required: true},
+  profileImg: { type: String, default: 'https://cdn.vuetifyjs.com/images/john.jpg' },
   role: { type: String, required: true, enum: Object.values(ROLES), default: ROLES.USER },
 });
 

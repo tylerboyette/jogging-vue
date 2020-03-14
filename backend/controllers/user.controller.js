@@ -73,7 +73,8 @@ function updateProfile(req, res, next) {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    profileImg: req.body.profileImg
   });
   req.userModel
     .save()
@@ -89,6 +90,7 @@ function updateProfile(req, res, next) {
         name: updatedUser.name,
         email: updatedUser.email,
         role: updatedUser.role,
+        profileImg: updatedUser.profileImg,
         token,
       });
     })
