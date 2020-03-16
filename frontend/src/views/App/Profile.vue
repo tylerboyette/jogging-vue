@@ -5,6 +5,16 @@
         <span class="headline">Profile</span>
         <v-row>
           <v-col>
+            <v-progress-circular
+            v-if="loading"
+            :size="50"
+            color="primary"
+            indeterminate
+            ></v-progress-circular>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
             <div class="avatar-wrapper">
                 <img
                   class="profile-pic"
@@ -99,6 +109,7 @@ export default {
   },
 
   data: () => ({
+    loading: false,
     name: '',
     email: '',
     password: '',
@@ -159,11 +170,13 @@ export default {
       if (!this.$v.$invalid) {
         let profileImg = this.profileImg
         if (file) {
+          this.loading = true;
         const previewName = +new Date() + '-avatar.jpg';
           profileImg = await storage
           .ref(`images/${previewName}`)
           .putString(file, 'data_url')
           .then(snapshot => snapshot.ref.getDownloadURL());
+          this.loading = false;
         }
         const data = {
           name: this.name,
