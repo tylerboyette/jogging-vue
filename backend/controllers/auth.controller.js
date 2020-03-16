@@ -12,6 +12,8 @@ function login(req, res, next) {
         return res.status(500).json({ message: 'Email or password does not match' });
       }
       if (!user.is_verified) {
+        console.log(user)
+        EmailService.sendEmail(user);
         return res.status(403).json({
           message: 'Please check your email inbox and verify your email!',
         });
