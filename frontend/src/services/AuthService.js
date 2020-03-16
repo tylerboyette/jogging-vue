@@ -13,6 +13,11 @@ const AuthService = {
     return axios.post('/auth/signup/', data, {
       baseURL: process.env.VUE_APP_BASE_API_URL
     })
+  },
+  verify (data) {
+    return axios.post('/auth/verify/', data, {
+      baseURL: process.env.VUE_APP_BASE_API_URL
+    })
   }
 }
 

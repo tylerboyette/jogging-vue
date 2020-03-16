@@ -26,7 +26,13 @@ function sendEmail(user) {
         <a href = "${url}">Click here!</a>
         <span>Thanks!</span>`,
   };
-  sgMail.send(msg);
+  sgMail.send(msg)
+  .then((data)=>{
+    console.log("send data",data)
+  })
+  .catch((err)=>{
+    console.log("fail", err)
+  });
 }
 
 module.exports = {

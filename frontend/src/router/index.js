@@ -18,6 +18,13 @@ const routes = [
     meta: { skipAuth: true},
     component: () => import(/* webpackChunkName: "about" */ '../views/Auth/Signup.vue')
   },
+  {
+    path: '/verify/:token',
+    name: 'verify',
+    meta: { skipAuth: true},
+    props: true,
+    component: () => import(/* webpackChunkName: "about" */ '../views/Auth/Verify.vue')
+  },
   { path: '/logout', name: 'logout', meta: { skipAuth: true},  component: () => import(/* webpackChunkName: "about" */ '../views/App/Logout.vue')},
   {
     path: '/',

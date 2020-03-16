@@ -57,7 +57,26 @@ function signup(req, res, next) {
   .catch(next);
 }
 
+function verify(req, res) {
+  try {
+    const { _id } = jwt.verify(req.body.token, config.jwtSecret);
+    User.findOne({ _id }).then(user => {
+      if (!user) res.json({ message: 'Can not find user!' });
+      else {
+        user.is_verified = true;
+        user.save();
+        res.json({ message: 'Email is verified!' });
+      }
+    });
+  } catch (error) {
+    if (error && error.message && error.message == 'jwt expired')
+      res.status(500).json({ message: 'Verification token is expired' });
+    else res.status(500).json({ message: error });
+  }
+}
+
 module.exports = {
   login,
   signup,
+  verify
 };

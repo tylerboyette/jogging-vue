@@ -8,4 +8,6 @@ router.route('/login')
 router.route('/signup')
   .post(authCtrl.signup);
 
+router.route('/verify')
+  .post(authCtrl.verify);
 module.exports = router;
